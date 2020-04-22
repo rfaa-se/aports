@@ -1,0 +1,37 @@
+# Maintainer: rfaa <rfaa@rfaa.se>
+pkgname=raylib-wayland
+pkgver=3.0.0
+pkgrel=1
+pkgdesc="Raylib game programming library targeting Wayland instead of X11"
+url="https://www.raylib.com/"
+arch="all"
+license="Zlib"
+depends="glfw-wayland musl"
+depends_dev="cmake"
+makedepends="$depends_dev cmake glfw-wayland-dev"
+subpackages="raylib-wayland-dev"
+source="$pkgname-$pkgver.tar.gz::https://github.com/raysan5/raylib/archive/$pkgver.tar.gz"
+builddir="$srcdir/raylib-$pkgver"
+options="!check"
+
+build() {
+	cmake . \
+		-Wno-dev \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DUSE_EXTERNAL_GLFW=ON \
+		-DSTATIC=OFF \
+		-DSHARED=ON \
+		-DWITH_PIC=ON \
+		-DBUILD_EXAMPLES=OFF \
+		-DBUILD_GAMES=OFF \
+		-DUSE_WAYLAND=ON
+	make
+}
+
+package() {
+	make DESTDIR="$pkgdir/" install
+}
+
+sha512sums="f6e78a923b139907b81a544632e5fc574cd7b029a56e42b91e4b8df1be450a393fb421ab84c2e4c933051bb6ef6f526749e647008cad2f4198601f96797de4b8  raylib-wayland-3.0.0.tar.gz"
